@@ -54,8 +54,14 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
         color: Colors.white,
         margin: const EdgeInsets.fromLTRB(40, 50, 40, 50),
         height: 400,
-        child:
-          InfiniteListView.builder(
+        child: Column(children: [_buildInfiniteList(), _buildButton()],)
+          
+        );
+  }
+
+
+  Widget _buildInfiniteList() {
+    return InfiniteListView.builder(
               padding: const EdgeInsets.all(16.0),
               itemBuilder: /*1*/ (context, i) {
                 if (i.isOdd) return const Divider(); /*2*/
@@ -68,8 +74,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
                   index += _prizes.length;
                 }
                 return _buildRow(_prizes[index], i);
-              })
-        );
+              });
   }
 
   Widget _buildRow(String word, int location) {
