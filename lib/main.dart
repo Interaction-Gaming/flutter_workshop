@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
-import 'package:infinite_listview/infinite_listview.dart';
 import 'package:tpir_wheel/infinite_prize_list.dart';
 
 void main() => runApp(MyApp());
