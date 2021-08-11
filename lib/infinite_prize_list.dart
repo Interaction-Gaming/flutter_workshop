@@ -32,8 +32,6 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
 
   final _biggerFont = const TextStyle(fontSize: 20.0, height: 1);
 
-  var audioPlayer = AudioPlayer();
-
   @override
   Widget build(BuildContext context) {
     final container = _buildOuterContainer();
@@ -64,6 +62,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   }
 
   Widget _buildList() {
+    // playLocalAsset("sfx/bensound-jazzyfrenchy.mp3");
     final infiniteListView = InfiniteListView.builder(
         // padding: const EdgeInsets.all(16.0),
         controller: _scrollController,
@@ -116,9 +115,9 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
     );
   }
 
-  Future<AudioPlayer> playLocalAsset() async {
+  Future<AudioPlayer> playLocalAsset(String filename) async {
     AudioCache cache = new AudioCache();
-    return await cache.play("sfx/3W6P7VF-game-reward.mp3");
+    return await cache.play(filename);
   }
 
   _spin(int prizeIndex) {
@@ -138,7 +137,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
       _previousOffset = destinationOffset;
       _previousIndex = prizeIndex;
     });
-    playLocalAsset();
+    playLocalAsset("sfx/3W6P7VF-game-reward.mp3");
     _scrollController.animateTo(destinationOffset,
         duration: Duration(seconds: 3), curve: Curves.linear);
   }
