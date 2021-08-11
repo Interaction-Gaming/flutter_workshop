@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:infinite_listview/infinite_listview.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class InfinitePrizeList extends StatefulWidget {
   const InfinitePrizeList({Key? key}) : super(key: key);
@@ -31,6 +32,8 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
 
   final _biggerFont = const TextStyle(fontSize: 20.0, height: 1);
 
+  var audioPlayer = AudioPlayer();
+
   @override
   Widget build(BuildContext context) {
     final container = _buildOuterContainer();
@@ -53,8 +56,11 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
 
   Widget _buildOuterContainer() {
     return Container(
-        color: color, margin: const EdgeInsets.all(50), child: _buildList(),
-         constraints: BoxConstraints(minWidth: 200, maxWidth: 400),);
+      color: color,
+      margin: const EdgeInsets.all(50),
+      child: _buildList(),
+      constraints: BoxConstraints(minWidth: 200, maxWidth: 400),
+    );
   }
 
   Widget _buildList() {
@@ -86,7 +92,8 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   Widget _buildRow(String word, int location, bool isEven) {
     return Material(
       child: ListTile(
-        title: Center(child: Text(word, style: _biggerFont, textAlign: TextAlign.center)),
+        title: Center(
+            child: Text(word, style: _biggerFont, textAlign: TextAlign.center)),
       ),
       color: isEven ? Colors.purple[200] : Colors.purple[500],
     );
@@ -109,6 +116,11 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
     );
   }
 
+  Future<AudioPlayer> playLocalAsset() async {
+    AudioCache cache = new AudioCache();
+    return await cache.play("sfx/3W6P7VF-game-reward.mp3");
+  }
+
   _spin(int prizeIndex) {
     setState(() {
       color = Colors.deepPurple[700];
@@ -117,13 +129,16 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
     //   _scrollController.jumpTo(SCROLL_OFFSET);
     // }
     final adjustment = -500.0 + (prizeIndex * 100);
-    final previousAdjustment = -500.0 + ((_prizes.length -_previousIndex) * 100);
-    final destinationOffset = _previousOffset + previousAdjustment + INITIAL_SPIN_OFFSET + adjustment;
+    final previousAdjustment =
+        -500.0 + ((_prizes.length - _previousIndex) * 100);
+    final destinationOffset =
+        _previousOffset + previousAdjustment + INITIAL_SPIN_OFFSET + adjustment;
     log(_previousOffset.toString());
     setState(() {
       _previousOffset = destinationOffset;
       _previousIndex = prizeIndex;
     });
+    playLocalAsset();
     _scrollController.animateTo(destinationOffset,
         duration: Duration(seconds: 3), curve: Curves.linear);
   }
