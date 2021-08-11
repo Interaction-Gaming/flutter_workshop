@@ -53,7 +53,8 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
 
   Widget _buildOuterContainer() {
     return Container(
-        color: color, margin: const EdgeInsets.all(50), child: _buildList());
+        color: color, margin: const EdgeInsets.all(50), child: _buildList(),
+         constraints: BoxConstraints(minWidth: 200, maxWidth: 400),);
   }
 
   Widget _buildList() {
