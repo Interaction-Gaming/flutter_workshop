@@ -12,7 +12,7 @@ class InfinitePrizeList extends StatefulWidget {
 }
 
 class _InfinitePrizeListState extends State<InfinitePrizeList> {
-  static const double SCROLL_OFFSET = -225.0;
+  static const double SCROLL_OFFSET = -200.0;
   static const double INITIAL_SPIN_OFFSET = -2000.0;
 
   InfiniteScrollController _scrollController = InfiniteScrollController(
@@ -21,7 +21,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   double _previousOffset = 0;
 
   final List<String> _prizes = [
-    'Prize 1',
+    'Prizep 1',
     'Prize 2',
     'Prize 3',
     'Prize 4',
@@ -29,7 +29,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   ];
   Color color = Colors.red;
 
-  final _biggerFont = const TextStyle(fontSize: 18.0);
+  final _biggerFont = const TextStyle(fontSize: 20.0, height: 1);
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +58,13 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
 
   Widget _buildList() {
     final infiniteListView = InfiniteListView.builder(
-        padding: const EdgeInsets.all(16.0),
+        // padding: const EdgeInsets.all(16.0),
         controller: _scrollController,
-        itemExtent: 50,
+        itemExtent: 100,
         itemBuilder: /*1*/ (context, i) {
-          if (i.isOdd) return const Divider(); /*2*/
+          // if (i.isOdd) return const Divider(); /*2*/
 
-          var index = i ~/ 2; /*3*/
+          var index = i; //i ~/ 2; /*3*/
           while (index >= _prizes.length) {
             index -= _prizes.length;
           }
@@ -72,7 +72,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
             index += _prizes.length;
           }
           log('index: ' + index.toString());
-          return _buildRow(_prizes[index], index);
+          return _buildRow(_prizes[index], index, i.isEven);
         });
 
     return Container(
@@ -82,12 +82,12 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
         child: infiniteListView);
   }
 
-  Widget _buildRow(String word, int location) {
-    return Container(
+  Widget _buildRow(String word, int location, bool isEven) {
+    return Material(
       child: ListTile(
-        title: Text(word, style: _biggerFont, textAlign: TextAlign.center),
+        title: Center(child: Text(word, style: _biggerFont, textAlign: TextAlign.center)),
       ),
-      // color: (location + 1).isEven ? Colors.grey : Colors.white,
+      color: isEven ? Colors.purple[200] : Colors.purple[500],
     );
   }
 
