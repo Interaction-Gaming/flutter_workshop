@@ -29,9 +29,18 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
     'Prize 5'
   ];
   Color? color = Colors.deepPurple[900];
-
+  bool _isSpinning = false;
+  AudioPlayer bgmAudioPlayer = AudioPlayer();
+  AudioCache audioCache = new AudioCache();
   final _biggerFont = const TextStyle(fontSize: 20.0, height: 1);
-
+  double volume = 1.0;
+  @override void initState() {
+    _setBGMAudioPlayer();
+    super.initState();
+  }
+  _setBGMAudioPlayer() {
+    // playLocalAsset("sfx/bensound-jazzyfrenchy.mp3").then((value) => bgmAudioPlayer = value);
+  }
   @override
   Widget build(BuildContext context) {
     final container = _buildOuterContainer();
@@ -46,7 +55,9 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
             _buildButton(3),
             _buildButton(4),
             _buildButton(5),
-            _resetButton()
+            _resetButton(),
+            _buildPlayBackgroundMusicButton(),
+            _buildMuteBackgroundMusicButton()
           ]),
           container
         ]));
@@ -62,11 +73,12 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   }
 
   Widget _buildList() {
-    // playLocalAsset("sfx/bensound-jazzyfrenchy.mp3");
+    // audioPlayer.setVolume(0);
     final infiniteListView = InfiniteListView.builder(
         // padding: const EdgeInsets.all(16.0),
         controller: _scrollController,
         itemExtent: 100,
+        physics: _isSpinning ? NeverScrollableScrollPhysics() : null,
         itemBuilder: /*1*/ (context, i) {
           // if (i.isOdd) return const Divider(); /*2*/
 
@@ -115,14 +127,37 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
     );
   }
 
-  Future<AudioPlayer> playLocalAsset(String filename) async {
-    AudioCache cache = new AudioCache();
-    return await cache.play(filename);
+  Widget _buildPlayBackgroundMusicButton() {
+    return TextButton(
+        onPressed: () => {
+              setState(() {
+                volume = 1;
+              }),
+              log('Volume: ' + volume.toString()),
+              bgmAudioPlayer.setVolume(volume)
+            },
+        child: Text('Play BG'));
+  }
+
+  Widget _buildMuteBackgroundMusicButton() {
+    return TextButton(
+        onPressed: () => {
+              setState(() {
+                volume = 0.0;
+              }),
+              bgmAudioPlayer.setVolume(volume)
+            },
+        child: Text('Mute BG'));
+  }
+
+  Future<AudioPlayer> playLocalAsset(String fileName) async {
+    return audioCache.play(fileName, volume: volume);
   }
 
   _spin(int prizeIndex) {
     setState(() {
       color = Colors.deepPurple[700];
+      _isSpinning = true;
     });
     // if (_previousOffset != 0.0) {
     //   _scrollController.jumpTo(SCROLL_OFFSET);
@@ -147,6 +182,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
       color = Colors.deepPurple[900];
       _previousOffset = SCROLL_OFFSET;
       _previousIndex = 0;
+      _isSpinning = false;
     });
     _scrollController.jumpTo(SCROLL_OFFSET);
   }
