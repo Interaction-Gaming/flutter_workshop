@@ -27,7 +27,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
     'Prize 4',
     'Prize 5'
   ];
-  Color color = Colors.red;
+  Color? color = Colors.deepPurple[900];
 
   final _biggerFont = const TextStyle(fontSize: 20.0, height: 1);
 
@@ -111,7 +111,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
 
   _spin(int prizeIndex) {
     setState(() {
-      color = Colors.primaries[math.Random().nextInt(Colors.primaries.length)];
+      color = Colors.deepPurple[700];
     });
     if (_previousOffset != 0.0) {
       _scrollController.jumpTo(SCROLL_OFFSET);
@@ -128,7 +128,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
 
   void _reset() {
     setState(() {
-      color = Colors.red;
+      color = Colors.deepPurple[900];
       _previousOffset = 0;
     });
     _scrollController.jumpTo(SCROLL_OFFSET);
