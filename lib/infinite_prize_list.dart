@@ -18,8 +18,8 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   InfiniteScrollController _scrollController = InfiniteScrollController(
     initialScrollOffset: SCROLL_OFFSET,
   );
-  double _previousOffset = 0;
-
+  double _previousOffset = SCROLL_OFFSET;
+  int _previousIndex = 0;
   final List<String> _prizes = [
     'Prizep 1',
     'Prize 2',
@@ -113,14 +113,16 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
     setState(() {
       color = Colors.deepPurple[700];
     });
-    if (_previousOffset != 0.0) {
-      _scrollController.jumpTo(SCROLL_OFFSET);
-    }
+    // if (_previousOffset != 0.0) {
+    //   _scrollController.jumpTo(SCROLL_OFFSET);
+    // }
     final adjustment = -500.0 + (prizeIndex * 100);
-    final destinationOffset = INITIAL_SPIN_OFFSET + SCROLL_OFFSET + adjustment;
+    final previousAdjustment = -500.0 + ((_prizes.length -_previousIndex) * 100);
+    final destinationOffset = _previousOffset + previousAdjustment + INITIAL_SPIN_OFFSET + adjustment;
     log(_previousOffset.toString());
     setState(() {
-      _previousOffset = adjustment;
+      _previousOffset = destinationOffset;
+      _previousIndex = prizeIndex;
     });
     _scrollController.animateTo(destinationOffset,
         duration: Duration(seconds: 3), curve: Curves.linear);
@@ -129,7 +131,8 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   void _reset() {
     setState(() {
       color = Colors.deepPurple[900];
-      _previousOffset = 0;
+      _previousOffset = SCROLL_OFFSET;
+      _previousIndex = 0;
     });
     _scrollController.jumpTo(SCROLL_OFFSET);
   }
