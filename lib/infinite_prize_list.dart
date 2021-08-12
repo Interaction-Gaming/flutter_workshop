@@ -36,6 +36,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   @override
   void initState() {
     super.initState();
+    audioManager.playLocalAsset("sfx/bensound-jazzyfrenchy.mp3");
   }
 
   @override
@@ -145,7 +146,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
       color = Colors.deepPurple[700];
       _isSpinning = true;
     });
-    audioManager.playLocalAsset("sfx/3W6P7VF-game-reward.mp3");
+    audioManager.playLocalAsset("sfx/WheelLaunch.mp3");
     final adjustment = -500.0 + (prizeIndex * 100);
     final previousAdjustment =
         -500.0 + ((_prizes.length - _previousIndex) * 100);
