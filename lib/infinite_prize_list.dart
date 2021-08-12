@@ -158,7 +158,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
       _previousIndex = prizeIndex;
     });
     _scrollController.animateTo(destinationOffset,
-        duration: Duration(seconds: 3), curve: Curves.linear);
+        duration: Duration(seconds: 3), curve: Curves.linear).then((value) => audioManager.playLocalAsset("sfx/InnerSelect.mp3"));
   }
 
   void _reset() {
