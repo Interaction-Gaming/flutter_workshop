@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:infinite_listview/infinite_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:tpir_wheel/simple-audio-manager.dart';
 
 class InfinitePrizeList extends StatefulWidget {
   const InfinitePrizeList({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   InfiniteScrollController _scrollController = InfiniteScrollController(
     initialScrollOffset: SCROLL_OFFSET,
   );
+  AudioManager audioManager = AudioManager();
   double _previousOffset = SCROLL_OFFSET;
   int _previousIndex = 0;
   final List<String> _prizes = [
@@ -30,17 +32,12 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
   ];
   Color? color = Colors.deepPurple[900];
   bool _isSpinning = false;
-  AudioPlayer bgmAudioPlayer = AudioPlayer();
-  AudioCache audioCache = new AudioCache();
   final _biggerFont = const TextStyle(fontSize: 20.0, height: 1);
-  double volume = 1.0;
-  @override void initState() {
-    _setBGMAudioPlayer();
+  @override
+  void initState() {
     super.initState();
   }
-  _setBGMAudioPlayer() {
-    // playLocalAsset("sfx/bensound-jazzyfrenchy.mp3").then((value) => bgmAudioPlayer = value);
-  }
+
   @override
   Widget build(BuildContext context) {
     final container = _buildOuterContainer();
@@ -56,8 +53,9 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
             _buildButton(4),
             _buildButton(5),
             _resetButton(),
-            _buildPlayBackgroundMusicButton(),
-            _buildMuteBackgroundMusicButton()
+            _buildAddBackgroundMusicButton(),
+            _buildUnmuteButton(),
+            _buildMuteButton()
           ]),
           container
         ]));
@@ -127,31 +125,19 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
     );
   }
 
-  Widget _buildPlayBackgroundMusicButton() {
+  Widget _buildAddBackgroundMusicButton() {
     return TextButton(
-        onPressed: () => {
-              setState(() {
-                volume = 1;
-              }),
-              log('Volume: ' + volume.toString()),
-              bgmAudioPlayer.setVolume(volume)
-            },
-        child: Text('Play BG'));
+        onPressed: () => {audioManager.playLocalAsset("sfx/bensound-jazzyfrenchy.mp3")}, child: Text('Play BG'));
   }
 
-  Widget _buildMuteBackgroundMusicButton() {
+  Widget _buildUnmuteButton() {
     return TextButton(
-        onPressed: () => {
-              setState(() {
-                volume = 0.0;
-              }),
-              bgmAudioPlayer.setVolume(volume)
-            },
-        child: Text('Mute BG'));
+        onPressed: () => {audioManager.setVolume(1.0)}, child: Text('Unmute BG'));
   }
 
-  Future<AudioPlayer> playLocalAsset(String fileName) async {
-    return audioCache.play(fileName, volume: volume);
+  Widget _buildMuteButton() {
+    return TextButton(
+        onPressed: () => {audioManager.setVolume(0.0)}, child: Text('Mute BG'));
   }
 
   _spin(int prizeIndex) {
@@ -159,9 +145,7 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
       color = Colors.deepPurple[700];
       _isSpinning = true;
     });
-    // if (_previousOffset != 0.0) {
-    //   _scrollController.jumpTo(SCROLL_OFFSET);
-    // }
+    audioManager.playLocalAsset("sfx/3W6P7VF-game-reward.mp3");
     final adjustment = -500.0 + (prizeIndex * 100);
     final previousAdjustment =
         -500.0 + ((_prizes.length - _previousIndex) * 100);
@@ -172,7 +156,6 @@ class _InfinitePrizeListState extends State<InfinitePrizeList> {
       _previousOffset = destinationOffset;
       _previousIndex = prizeIndex;
     });
-    playLocalAsset("sfx/3W6P7VF-game-reward.mp3");
     _scrollController.animateTo(destinationOffset,
         duration: Duration(seconds: 3), curve: Curves.linear);
   }
